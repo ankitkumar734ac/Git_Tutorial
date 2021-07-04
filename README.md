@@ -67,4 +67,108 @@ The output tells us two things:
 + nothing to commit, working directory clean – this is saying that there are no pending changes.
 
 # Git log command
+The git log command displays a record of the commits in a Git repository. By default, the git log command displays a commit hash, the commit message, and other commit metadata. You can filter the output of git log using various options
+![Screenshot (608)](https://user-images.githubusercontent.com/71343747/124383344-9f1e8400-dce9-11eb-950d-99e4c9c16d47.png)
+### Navigating The Log
+If you're not used to a pager on the command line, navigating in Less can be a bit odd. Here are some helpful keys:
+```sh
+to scroll <b>down</b>, press
+<b>j</b> or <b>↓</b> to move down one line at a time
+<b>d</b> to move by half the page screen
+<b>f</b> to move by a whole page screen
+```
+```sh
+to scroll <b>up</b>, press
+<b>k</b> or <b>↑</b> to move _up_ one line at a time
+<b>u</b> to move by half the page screen
+<b>b</b> to move by a whole page screen
+```
+```sh
+press <b>q</b> to quit out of the log (returns to the regular command prompt)
+```
+### Filter the log command output
++ This command returns a list of the three most recent commits made to a repository.
+```sh
+git log -n 3
+```
++ You can also filter the commits returned by git log by the person who wrote or committed the changes. Suppose we want to see a list of commits pushed by “John Smith.” We can do so using these commands, The author flag limits the results to commits whose changes were made by John Smith. The committer flag limits the results to the commits that were actually committed by that individual.
+```sh
+git log --author="John Smith"
+git log --committer="John smith"
+```
++ you can filter the results of git log by date. To do so, you can use the—before and—after flags. These flags both accept a wide range of date formats, but the two most commonly used are relative references and full dates.
+```sh
+git log --after="2019-3-2"
+git log --before="yesterday"
+```
++ you may only want to see a list of commits that have affected a particular file. To do so, you can specify the file whose changes you want to see.
+```sh
+git log -- main.py
+```
++ You can also search for commits that have removed or added a particular line of code.
+```sh
+git log -S"# Introduction"
+```
++ This command returns a list of all commits between the b72beb5 and b53b22d commits.
+```sh
+git log b72beb5..b53b22d
+```
++This command returns a list of all commits whose messages start with “feat:”.
+```sh
+git log --grep="feat:"
+```
++ By default, the git log statement returns a full log entry for each commit made to a repository. You can retrieve a list of commit IDs and their associated commit messages using the –oneline flag.
+```sh
+git log --oneline
+```
++ The –decorate flag allows you to see all the references (i.e. branches and tags) that point to a particular commit.
+```sh
+git log --decorate
+```
++ The –stat flag allows you to display the number of lines of code added to and deleted from a repository in each commit.The plus signs (+) indicate insertions, and, if there were any, the minus signs (-) would indicate deletions.
+```sh
+git log --stat
+```
++ If you want to see the exact changes made to a repository, you can use the -p flag.  The flag is --patch which can be shortened to just -p:
+```sh
+git log -p
+```
++ The git shortlog command provides a summary of a git log
+```sh
+git shortlog
+```
++  find the commit that has a SHA that starts with f9720a.
+```sh
+git log f9720a
+```
++ find the commit that has the message <b>Set article timestamp color</b>. Which commit belongs to that SHA? Provide the first 7 characters of the SHA.
+```sh
+git log --oneline --grep='Set article timestamp color'
+```
+# git show
+shows a specific commit is git show:
+```sh
+ git show fdf5493
+ ```
+ he git show command will show only one commit. So don't get alarmed when you can't find any other commits - it only shows one. The output of the git show command is exactly the same as the git log -p command. So by default, git show displays:
++ the commit
++ the author
++ the date
++ the commit message
++ the patch information
+However, git show can be combined with most of the other flags we've looked at:
++ --stat - to show the how many files were changed and the number of lines that were added/removed
++ -p or --patch - this the default, but if --stat is used, the patch won't display, so pass -p to add it again
++ -w - to ignore changes to whitespace
+
+
+
+
+
+
+
+
+
+
+
 
