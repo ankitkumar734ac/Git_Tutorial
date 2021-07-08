@@ -162,6 +162,75 @@ However, git show can be combined with most of the other flags we've looked at:
 + -w - to ignore changes to whitespace
 
 
+# Git Add Command
+The git add command is used to move files from the Working Directory to the Staging Index.
+The git add command adds a file or folder to the staging area. Files in the staging area are those that you want to add to your next commit. Git add does not modify or otherwise affect your repository or files.
+```sh
+$ git add <file1> <file2> … <fileN>
+```
+This command:
++ takes a space-separated list of file names
++ alternatively, the period . can be used in place of a list of files to tell Git to add the current directory (and all nested files)
+```sh
+ git add css/app.css js/app.js
+ ```
+ ```sh
+ git add .
+```
+# Git Commit Command
+The git commit command takes files from the Staging Index and saves them in the repository.
+The commit command will commit the changes and generate a commit-id. The commit command without any argument will open the default text editor and ask for the commit message. We can specify our commit message in this text editor.
+```sh
+$ git commit 
+```
+![git-commit2 (1)](https://user-images.githubusercontent.com/71343747/124842300-dff9ef80-dfac-11eb-90f2-89f2f6e32fac.png)
+Press the Esc key and after that 'I' for insert mode. Type a commit message whatever you want. Press Esc after that ':wq' to save and exit from the editor. Hence, we have successfully made a commit.
+<b>Note</b> lines that start with a # are comments and will not be recorded
+![Screenshot (609)](https://user-images.githubusercontent.com/71343747/124842433-251e2180-dfad-11eb-99a3-724e2d1aff5e.png)
+We can see in the above output that log option is displaying commit-id, author detail, date and time, and the commit message.
+### Bypass The Editor With The -m Flag
+```sh
+git commit -m "Initial commit"
+```
+# git diff
+the git diff command is used to see changes that have been made but haven't been committed, yet:
+```sh
+git diff
+```
+This command displays:
++ the files that have been modified
++ the location of the lines that have been added/removed
++ the actual changes that have been made
+<b>Note</b>
+It's the same output that we say with<b> git log -p </b>! Wanna know a secret? <b>git log -p</b> uses <b>git diff</b> under the hood. 
+# Git Ignore
+If you want to keep a file in your project's directory structure but make sure it isn't accidentally committed to the project, you can use the specially named file, .gitignore (note the dot at the front, it's important!). Add this file to your project in the same directory that the hidden .git directory is located. All you have to do is list the names of files that you want Git to ignore (not track) and it will ignore them.
+.gitignore file is used to tell Git about the files that Git should not track. This file should be placed in the same directory that the .git directory is in.
+Globbing lets you use special characters to match patterns/characters. In the .gitignore file, you can use the following:
++ blank lines can be used for spacing
++ # - marks line as a comment
++ * - matches 0 or more characters
++ ? - matches 1 character
++ [abc] - matches a, b, _or_ c
++ ** - matches nested directories - a/** /z matches
+++ a/z
+++ a/b/z
+++ a/b/c/z
+![Screenshot (610)](https://user-images.githubusercontent.com/71343747/124844311-9233b600-dfb1-11eb-9cab-c0161a78aa76.png)
+we can create multiple .gitignore files for a project. But Git also allows us to create a universal .gitignore file that can be used for the whole project. This file is known as a global .gitignore file. To create a global .gitignore, run the below command on terminal:
+```sh
+git config --global core.excludesfile ~/.gitignore_global  
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
