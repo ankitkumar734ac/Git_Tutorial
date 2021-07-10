@@ -221,9 +221,186 @@ we can create multiple .gitignore files for a project. But Git also allows us to
 ```sh
 git config --global core.excludesfile ~/.gitignore_global  
 ```
+# Git Tag Command
+The command we'll be using to interact with the repository's tags is the git tag command:
+```sh
+$ git tag -a v1.0
+```
+This will open your code editor and wait for you to supply a message for the tag. How about the message "Ready for content"?
+`CAREFUL: In the command above (git tag -a v1.0) the -a flag is used. This flag tells Git to create an annotated flag. If you don't provide the flag (i.e. git tag v1.0) then it'll create what's called a lightweight tag.`
+Annotated tags are recommended because they include a lot of extra information such as:
++ the person who made the tag
++ the date the tag was made
++ a message for the tag
+Because of this, you should always use annotated tags.
+<b>Note</b> to close git editor After writing commit message, just press Esc Button and then write<b> :wq or :wq! </b>and then Enter to close the unix file.
+# Verify Tag
+ it will display all tags that are in the repository.
+```sh
+git tag
+```
+# Git Log's --decorate Flag
+The --decorate flag will show us some details that are hidden from the default view.
+```sh
+git log --decorate
+```
+The Terminal application showing the output of the git log --decorate command. The log output now displays the newly created tag.
+The tag information is at the very end of the first line:
+`commit 6fa5f34790808d9f4dccd0fa8fdbc40760102d6e (HEAD -> master, tag: v1.0)`
+Did you notice that, in addition to the tag information being displayed in the log, the --decorate also revealed HEAD -> master? That's information about a branch! We'll be looking at branches in Git, next.
+# Deleting A Tag
+What if you accidentally misspelled something in the tag's message, or mistyped the actual tag name (v0.1 instead of v1.0). How could you fix this? The easiest way is just to delete the tag and make a new one.
 
+A Git tag can be deleted with the -d flag (for delete!) and the name of the tag:
+```sh
+ git tag -d v1.0
+```
+```sh
+fit tag -delete v1.0
+```
+# Adding A Tag To A Past Commit
+Running git tag -a v1.0 will tag the most recent commit. But what if you wanted to tag a commit that occurred farther back in the repo's history?
 
+All you have to do is provide the SHA of the commit you want to tag!
+```sh
+git tag -a v1.0 a87984
+```
+(after popping open a code editor to let you supply the tag's message) this command will tag the commit with the SHA a87084 with the tag v1.0. Using this technique, you can tag any commit in the entire git repository! Pretty neat, right?...and it's just a simple addition to add the SHA of a commit to the Git tagging command you already know.
+# The git branch command
+The git branch command is used to interact with Git's branches:
+```sh
+git branch
+```
+It can be used to:
++ list all branch names in the repository
++ create new branches
++ delete branches
+If we type out just git branch it will list out the branches in a repository:
+# Create A Branch
+To create a branch, all you have to do is use git branch and provide it the name of the branch you want it to create. So if you want a branch called "sidebar", you'd run this command:
+```sh
+git branch sidebar
+```
+# The git checkout Command
+Remember that when a commit is made that it will be added to the current branch. So even though we created the new sidebar, no new commits will be added to it since we haven't switched to it, yet. If we made a commit right now, that commit would be added to the master branch, not the sidebar branch. We've already seen this in the demo, but to switch between branches, we need to use Git's checkout command.
+```sh
+ git checkout sidebar
+ ```
+ It's important to understand how this command works. Running this command will:
++ remove all files and directories from the Working Directory that Git is tracking
+++ (files that Git tracks are stored in the repository, so nothing is lost)
++ go into the repository and pull out all of the files and directories of the commit that the branch points to
+So this will remove all of the files that are referenced by commits in the master branch. It will replace them with the files that are referenced by the commits in the sidebar branch.
+Let's use this new feature of the git checkout command to create our new footer branch and have this footer branch start at the same location as the master branch:
+```sh
+git checkout -b footer master
+```
+# Branches In The Log
+The branch information in the command prompt is helpful, but the clearest way to see it is by looking at the output of git log. But just like we had to use the --decorate flag to display Git tags, we need it to display branches.
+```sh
+git log --oneline --decorate
+```
+## Note
+```sh
+git branch alt-sidebar-loc 42a69f
+```
+It creates a new branch called alt-sidebar-loc and has it pointing at the commit with the SHA 42a69f
+# Delete A Branch
+A branch is used to do development or make a fix to the project that won't affect the project (since the changes are made on a branch). Once you make the change on the branch, you can combine that branch into the master branch (this "combining of branches" is called "merging" and we'll look at it shortly).
 
+Now after a branch's changes have been merged, you probably won't need the branch anymore. If you want to delete the branch, you'd use the -d flag. The command below includes the -d flag which tells Git to delete the provided branch (in this case, the "sidebar" branch).
+```sh
+git branch -d sidebar
+```
+One thing to note is that you can't delete a branch that you're currently on. So to delete the sidebar branch, you'd have to switch to either the master branch or create and switch to a new branch.
+Deleting something can be quite nerve-wracking. Don't worry, though. Git won't let you delete a branch if it has commits on it that aren't on any other branch (meaning the commits are unique to the branch that's about to be deleted). If you created the sidebar branch, added commits to it, and then tried to delete it with the git branch -d sidebar, Git wouldn't let you delete the branch because you can't delete a branch that you're currently on. If you switched to the master branch and tried to delete the sidebar branch, Git also wouldn't let you do that because those new commits on the sidebar branch would be lost! To force deletion, you need to use a capital D flag - git branch -D sidebar.
+# See All Branches At Once
+We've made it to the end of all the changes we needed to make! Awesome job!
+Now we have multiple sets of changes on three different branches. We can't see other branches in the git log output unless we switch to a branch. Wouldn't it be nice if we could see all branches at once in the git log output.
+As you've hopefully learned by now, the git log command is pretty powerful and can show us this information. We'll use the new --graph and --all flags:
+```sh
+git log --oneline --decorate --graph --all
+```
+The --graph flag adds the bullets and lines to the leftmost part of the output. This shows the actual branching that's happening. The --all flag is what displays all of the branches in the repository.
+Running this command will show all branches and commits in the repository: This shows all branches and therefore all commits in the repository.
+# Merging.
+Combining branches together is called merging.
+Git can automatically merge the changes on different branches together. This branching and merging ability is what makes Git incredibly powerful! You can make small or extensive changes on branches, and then just use Git to combine those changes together.
+the two main types of merges in Git, a <b>Regular merge and a Fast-forward merge</b>.
+It's very important to know which branch you're on when you're about to merge branches together. Remember that making a merge makes a commit.
+As of right now, we do not know how to undo changes. We'll go over it in the next lesson, but if you make a merge on the wrong branch, use this command to undo the merge:
+```sh
+git reset --hard HEAD^
+```
+(Make sure to include the ^ character! It's a known as a "Relative Commit Reference" and indicates "the parent commit". We'll look at Relative Commit References in the next lesson.)
+## The Merge Command
+The git merge command is used to combine Git branches:
+```sh
+git merge <name-of-branch-to-merge-in>
+```
+When a merge happens, Git will:
++ look at the branches that it's going to merge
++ look back along the branch's history to find a single commit that both branches have in their commit history
++ combine the lines of code that were changed on the separate branches together
++ makes a commit to record the merge
+### Fast-forward Merge
+When we merge, we're merging some other branch into the current (checked-out) branch. We're not merging two branches into a new branch. We're not merging the current branch into the other branch.
+Now, since footer is directly ahead of master, this merge is one of the easiest merges to do. Merging footer into master will cause a Fast-forward merge. A Fast-forward merge will just move the currently checked out branch forward until it points to the same commit that the other branch (in this case, footer) is pointing to.
+To merge in the footer branch, run:
+```sh
+git merge footer
+```
+now that you've merged the two branches together. the master branch and the footer branch point to the same commit
+to show:
+```sh
+git log --oneline --graph  --decorate --all
+```
+### Perform A Regular Merge
+So let's do the more common kind of merge where two divergent branches are combined. You'll be surprised that to merge in a divergent branch like sidebar is actually no different!
+To merge in the sidebar branch, make sure you're on the master branch and run:
+```sh
+git merge sidebar
+```
+Because this combines two divergent branches, a commit is going to be made. And when a commit is made, a commit message needs to be supplied. Since this is a merge commit a default message is already supplied. You can change the message if you want, but it's common practice to use the default merge commit message. So when your code editor opens with the message, just close it again and accept that commit message.
+<b>Question</b>
+Let's say a repository has 4 branches in it:
++ master
++ allisons-mobile-footer-fix
++ nav-updates
++ jonathans-seo-changes
+The changes on master and allisons-mobile-footer-fix need to be merged together. If HEAD points to allisons-mobile-footer-fix, which branch will move when the merge is performed?
+<b>Ans:</b> allisons-mobile-footer-fix branch HEAD pointer is pointing at, that's the branch that will have the merge commit.
+# What If A Merge Fails?
+The merges we just did were able to merge successfully. Git is able to intelligently combine lots of work on different branches. However, there are times when it can't combine branches together. When a merge is performed and fails, that is called a merge conflict. We'll look at merge conflicts.
+If a merge conflict does occur, Git will try to combine as much as it can, but then it will leave special markers (e.g. >>> and <<<) that tell you where you (yep, you the programmer!) needs to manually fix.
+## What Causes A Merge Conflict
+As you've learned, Git tracks lines in files. A merge conflict will happen when the exact same line(s) are changed in separate branches. For example, if you're on a alternate-sidebar-style branch and change the sidebar's heading to "About Me" but then on a different branch and change the sidebar's heading to "Information About Me", which heading should Git choose? You've changed the heading on both branches, so there's no way Git will know which one you actually want to keep. And it sure isn't going to just randomly pick for you!
+
+Let's force a merge conflict so we can learn to resolve it. Trust me, it's simple once you get the hang of it! Remember that a merge conflict occurs when Git isn't sure which line(s) you want to use from the branches that are being merged. So we need to edit the same line on two different branches...and then try to merge them.
+# Merge Conflict Output Explained
+```sh
+ git merge heading-update 
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+```
+Notice that right after the git merge heading-update command, it tries merging the file that was changed on both branches (index.html), but that there was a conflict. Also, notice that it tells you what happened - "Automatic merge failed; fix conflicts and then commit the result".
+
+Merge Conflict Indicators Explanation
+The editor has the following merge conflict indicators:
++ <<<<<<< HEAD everything below this line (until the next indicator) shows you what's on the current branch
++ ||||||| merged common ancestors everything below this line (until the next indicator) shows you what the original lines were
++ ======= is the end of the original lines, everything that follows (until the next indicator) is what's on the branch that's being merged in
++ >>>>>>> heading-update is the ending indicator of what's on the branch that's being merged in (in this case, the heading-update branch)
+
+# Resolving A Merge Conflict
+Git is using the merge conflict indicators to show you what lines caused the merge conflict on the two different branches as well as what the original line used to have. So to resolve a merge conflict, you need to:
++ choose which line(s) to keep
++ remove all lines with indicators
+# Commit Merge Conflict
+Once you've removed all lines with merge conflict indicators and have selected what heading you want to use, just save the file, add it to the staging index, and commit it! Just like with a regular merge, this will pop open your code editor for you to supply a commit message. Just like before, it's common to use the provided merge commit message, so after the editor opens, just close it to use the provided commit message.
+
+And that's it! Merge conflicts really aren't all that challenging once you understand what the merge conflict indicators are showing you
 
 
 
