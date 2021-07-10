@@ -402,17 +402,135 @@ Once you've removed all lines with merge conflict indicators and have selected w
 
 And that's it! Merge conflicts really aren't all that challenging once you understand what the merge conflict indicators are showing you
 
+# Undoing Changes
+<hr/>
+# Modifying the last commit
+<br/>
+## Changing The Last Commit
+You've already made plenty of commits with the git commit command. Now with the --amend flag, you can alter the most-recent commit.
+```sh
+ git commit --amend
+```
+If your Working Directory is clean (meaning there aren't any uncommitted changes in the repository), then running git commit --amend will let you provide a new commit message. Your code editor will open up and display the original commit message. Just fix a misspelling or completely reword it! Then save it and close the editor to lock in the new commit message.
+## Add Forgotten Files To Commit
+Alternatively, git commit --amend will let you include files (or changes to files) you might've forgotten to include. Let's say you've updated the color of all navigation links across your entire website. You committed that change and thought you were done. But then you discovered that a special nav link buried deep on a page doesn't have the new color. You could just make a new commit that updates the color for that one link, but that would have two back-to-back commits that do practically the exact same thing (change link colors).
+
+Instead, you can amend the last commit (the one that updated the color of all of the other links) to include this forgotten one. To do get the forgotten link included, just:
++ edit the file(s)
++ save the file(s)
++ stage the file(s)
++ and run git commit --amend
+So you'd make changes to the necessary CSS and/or HTML files to get the forgotten link styled correctly, then you'd save all of the files that were modified, then you'd use git add to stage all of the modified files (just as if you were going to make a new commit!), but then you'd run git commit --amend to update the most-recent commit instead of creating a new one.
+# Reverting A Commit
+When you tell Git to revert a specific commit, Git takes the changes that were made in commit and does the exact opposite of them. Let's break that down a bit. If a character is added in commit A, if Git reverts commit A, then Git will make a new commit where that character is deleted. It also works the other way where if a character/line is removed, then reverting that commit will add that content back!
+## The git revert Command
+Now that I've made a commit with some changes, I can revert it with the git revert command
+```sh
+git revert <SHA-of-commit-to-revert>
+```
+Since the SHA of the most-recent commit is db7e87a, to revert it: I'll just run git revert db7e87a (this will pop open my code editor to edit/accept the provided commit message)
+# Resetting Commits
+<b>Reset vs Revert</b>
+At first glance, resetting might seem coincidentally close to reverting, but they are actually quite different. Reverting creates a new commit that reverts or undos a previous commit. Resetting, on the other hand, erases commits!
+##  Resetting Is Dangerous ⚠️
+You've got to be careful with Git's resetting capabilities. This is one of the few commands that lets you erase commits from the repository. If a commit is no longer in the repository, then its content is gone.
+
+To alleviate the stress a bit, Git does keep track of everything for about 30 days before it completely erases anything. To access this content, you'll need to use the git reflog command. Check out these links for more info:
+Relative Commit References
+You already know that you can reference commits by their SHA, by tags, branches, and the special HEAD pointer. Sometimes that's not enough, though. There will be times when you'll want to reference a commit relative to another commit. For example, there will be times where you'll want to tell Git about the commit that's one before the current commit...or two before the current commit. There are special characters called "Ancestry References" that we can use to tell Git about these relative references. Those characters are:
+
++ ^ – indicates the parent commit
++ ~ – indicates the first parent commit
+Here's how we can refer to previous commits:
+
++ the parent commit – the following indicate the parent commit of the current commit
+++ HEAD^
+++ HEAD~
+++ HEAD~1
++ the grandparent commit – the following indicate the grandparent commit of the current commit
+++ HEAD^^
+++ HEAD~2
++ the great-grandparent commit – the following indicate the great-grandparent commit of the current commit
+++ HEAD^^^
+++ HEAD~3
+The main difference between the ^ and the ~ is when a commit is created from a merge. A merge commit has two parents. With a merge commit, the ^ reference is used to indicate the first parent of the commit while ^2 indicates the second parent. The first parent is the branch you were on when you ran git merge while the second parent is the branch that was merged in.
+# The git reset Command
+The git reset command is used to reset (erase) commits:
+```sh
+git reset <reference-to-commit>
+```
+It can be used to:
++ move the HEAD and current branch pointer to the referenced commit
++ erase commits
++ move committed changes to the staging index
++ unstage committed changes
+# Git Reset's Flags
+The way that Git determines if it erases, stages previously committed changes, or unstages previously committed changes is by the flag that's used. The flags are:
+--mixed
+--soft
+--hard
+It's easier to understand how they work with a little animation.
+<b>💡 Backup Branch 💡</b>
+Remember that using the git reset command will erase commits from the current branch. So if you want to follow along with all the resetting stuff that's coming up, you'll need to create a branch on the current commit that you can use as a backup.
+
+Before I do any resetting, I usually create a backup branch on the most-recent commit so that I can get back to the commits if I make a mistake:
+```sh
+git branch backup
+```
+Reset's --mixed Flag
+Let's look at each one of these flags.
+```sh
+* 9ec05ca (HEAD -> master) Revert "Set page heading to "Quests & Crusades""
+* db7e87a Set page heading to "Quests & Crusades"
+* 796ddb0 Merge branch 'heading-update'
+```
+Using the sample repo above with HEAD pointing to master on commit 9ec05ca, running git reset --mixed HEAD^ will take the changes made in commit 9ec05ca and move them to the working directory.
+![ud123-l6-git-revert-mixed](https://user-images.githubusercontent.com/71343747/125152301-652a0380-e169-11eb-92b0-62f1b9d83ee8.png)
+💡 Back To Normal 💡
+If you created the backup branch prior to resetting anything, then you can easily get back to having the master branch point to the same commit as the backup branch. You'll just need to:
+
+remove the uncommitted changes from the working directory
+merge backup into master (which will cause a Fast-forward merge and move master up to the same point as backup)
+```sh
+ git checkout -- index.html
+ git merge backup
+```
+# Reset's --soft Flag
+Let's use the same few commits and look at how the --soft flag works:
+```sh
+* 9ec05ca (HEAD -> master) Revert "Set page heading to "Quests & Crusades""
+* db7e87a Set page heading to "Quests & Crusades"
+* 796ddb0 Merge branch 'heading-update'
+```
+Running git reset --soft HEAD^ will take the changes made in commit 9ec05ca and move them directly to the Staging Index.
+![ud123-l6-git-revert-soft](https://user-images.githubusercontent.com/71343747/125152361-b33f0700-e169-11eb-8c60-d76fa15270b8.png)
+
+# Reset's --hard Flag
+Last but not least, let's look at the --hard flag:
+```sh
+* 9ec05ca (HEAD -> master) Revert "Set page heading to "Quests & Crusades""
+* db7e87a Set page heading to "Quests & Crusades"
+* 796ddb0 Merge branch 'heading-update'
+```
+Running git reset --hard HEAD^ will take the changes made in commit 9ec05ca and erases them.
+![ud123-l6-git-revert-hard](https://user-images.githubusercontent.com/71343747/125152387-dbc70100-e169-11eb-9be4-39f02fbb730a.png)
+# Reset Recap
+To recap, the git reset command is used erase commits:
+```sh
+git reset <reference-to-commit>
+```
+It can be used to:
++ move the HEAD and current branch pointer to the referenced commit
++ erase commits with the --hard flag
++ moves committed changes to the staging index with the --soft flag
++ unstages committed changes --mixed flag
+Typically, ancestry references are used to indicate previous commits. The ancestry references are:
++ ^ – indicates the parent commit
++ ~ – indicates the first parent commit
 
 
 
-
-
-
-
-
-
-
-
+--------------------------END------------------------------------
 
 
 
