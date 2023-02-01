@@ -1,22 +1,22 @@
 Git
 ====
 
-Set your username global:->  git config --global user.name "FIRST_NAME LAST_NAME"
+Set your username global :->  `git config --global user.name "FIRST_NAME LAST_NAME"`
 
-Set your email address global:->  git config --global user.email "MY_NAME@example.com"
+Set your email address global:->  `git config --global user.email "MY_NAME@example.com"`
 
-Set your username:-> git config user.name "FIRST_NAME LAST_NAME"
+Set your username :-> `git config user.name "FIRST_NAME LAST_NAME"`
 
-Set your email address:-> git config user.email "MY_NAME@example.com"
+Set your email address :-> `git config user.email "MY_NAME@example.com"`
 
-Verify your configuration by displaying your configuration file:-> cat .git/config
+Verify your configuration by displaying your configuration file:-> `cat .git/config`
 
-You can view all of your settings and where they are coming from using:->  git config --list --show-origin
+You can view all of your settings and where they are coming from using:->  `git config --list --show-origin`
 
-Disable use of the Git credential cache using:->  git config --global --unset credential.helper
+Disable use of the Git credential cache using:->  `git config --global --unset credential.helper`
 
-To Add Origin:-> git remote add origin https://github.com/kumarankit00792/temp.git
-To Remove Origin:- git remote remove origin
+To Add Origin :-> `git remote add origin https://github.com/kumarankit00792/temp.git`
+To Remove Origin :-> `git remote remove origin`
 
 
 I Have two github account then how to use https for both:-
@@ -34,6 +34,6 @@ For example, when I use the "Clone with HTTPS" button on this repository, GitHub
       git config credential.github.com.username username :-doesn't seem to work
       git config credential.useHttpPath true :-does work, but it uses the entire repository as key, so it's annoying if you have multiple repositories under one account.
 
-First time Push in Github:-> git push --set-upstream origin master
-                         :-> git push -u origin master
+First time Push in Github:-> `git push --set-upstream origin master`
+                         :-> `git push -u origin master`
                Note --set-upstream  == -u
